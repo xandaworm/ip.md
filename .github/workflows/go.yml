@@ -1,0 +1,44 @@
+
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check:
+    name: Lint 
+    runs-on: ubuntu-latest # runs on linux
+    steps:
+      - uses: actions/checkout@v4 # Downloads repo code to linux
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod # installs go to the machine with the version in go.mod
+      - name: Check formatting # bash to check files that do not align with the go format standards
+        run: | 
+          unformatted=$(gofmt -l .)
+          if [ -n $unformatted ]; then
+            echo "These files are not formatted. Use 'gofmt -w .' on them:"
+            echo "$unformatted"
+            exit 1
+          fi
+      - name: Vet # "Vet examines Go source code and reports suspicious constructs"
+        run: go vet ./...
+      - name: Test # test with the race detector to prevent data race
+        run: go test -race ./...
+    
+  build:
+    name: Build (${{ matrix.os }}) # runs a build job on the defined matrix (windows, linux, mac)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4 # Downloads repo code to os
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod # installs go to the machine with the version in go.mod
+      - name: Build # Builds on the os matrix
+        run: go buid ./...
