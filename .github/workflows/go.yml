@@ -19,7 +19,7 @@ jobs:
       - name: Check formatting # bash to check files that do not align with the go format standards
         run: | 
           unformatted=$(gofmt -l .)
-          if [ -n $unformatted ]; then
+          if [ -n "$unformatted" ]; then
             echo "These files are not formatted. Use 'gofmt -w .' on them:"
             echo "$unformatted"
             exit 1
