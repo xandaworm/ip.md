@@ -8,6 +8,7 @@ Inside a project, each device is described once in its own `.md` file. IP.MD wil
 | Physical | Racks, devices by rack unit, cables between physical ports | folders, `rack_unit`, `links`  |
 | Logical | Network/VLAN zones, devices and their services, allowed traffic between zones   | `networks`, `interfaces`, `services`, `rules`  |
 
+Commands: `ipmd watch homelab --view physical`/`--view /logical`
 
 ## Project Layout 
 ```
